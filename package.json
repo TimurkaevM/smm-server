@@ -19,10 +19,16 @@
     "mongoose": "^5.12.2"
   },
   "devDependencies": {
+    "husky": "^6.0.0",
     "lint-staged": "^10.5.4",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "simple-git-hooks": "^2.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
