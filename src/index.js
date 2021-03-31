@@ -13,21 +13,22 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 
 async function start() {
-    try{
-        await mongoose.connect("mongodb+srv://mohmad:12345@cluster0.rxses.mongodb.net/smm", {
-            useFindAndModify: false,
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+  try {
+    await mongoose.connect(
+      'mongodb+srv://mohmad:12345@cluster0.rxses.mongodb.net/smm',
+      {
+        useFindAndModify: false,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+    );
 
-        app.listen(PORT, () => {
-            console.log(`Server has been started on port: ${PORT}`);
-        });
-    } catch(e) {
-        console.log(e);
-    }
+    app.listen(PORT, () => {
+      console.log(`Server has been started on port: ${PORT}`);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-
 start();
-
