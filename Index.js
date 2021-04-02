@@ -3,9 +3,6 @@ const mongoose = require('mongoose');
 const authRouter = require('./src/routes/authRouter');
 require('dotenv').config();
 
-// const PORT = process.env.PORT || 80;
-// console.log(process.env.MY_BASE);
-
 const app = express();
 
 app.use(express.json());
