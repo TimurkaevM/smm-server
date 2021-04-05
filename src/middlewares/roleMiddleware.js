@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { secret } = require('../routes/Config');
+require('dotenv').config();
 
 module.exports = (roles) => {
   return function (req, res, next) {
@@ -13,7 +13,7 @@ module.exports = (roles) => {
         return res.status(403).json({ message: 'Пользователь не авторизован' });
       }
 
-      const { roles: userRoles } = jwt.verify(token, secret);
+      const { roles: userRoles } = jwt.verify(token, process.env.MY_SECRET_KEY);
       let hasRole = false;
       userRoles.forEach((role) => {
         if (roles.includes(role)) {

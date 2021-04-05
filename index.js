@@ -1,12 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const authRouter = require('./src/routes/authRouter');
+const usersRouter = require('./src/routes/usersRouter');
+const postRoutes = require('./src/routes/postRouter');
 require('dotenv').config();
 
 const app = express();
 
 app.use(express.json());
+app.use('/smm', usersRouter);
 app.use('/smm', authRouter);
+app.use('/smm', postRoutes);
 app.use(express.urlencoded({ extended: true }));
 
 async function start() {
