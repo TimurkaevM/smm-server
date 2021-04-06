@@ -3,14 +3,10 @@ const Role = require('../models/Role');
 const Post = require('../models/Post');
 
 class postsController {
-  async findAll(res, req) {
+  async findAll(req, res) {
     try {
-      const newPost = new Post({
-        title: 'dsdadasd',
-        text: 'dsadasd',
-        // author: req.user._id
-      });
-      await newPost.save();
+      const user = await Post.findOne();
+
       res.json({ message: 'OK' });
     } catch (e) {
       console.log(e);
@@ -18,7 +14,7 @@ class postsController {
     }
   }
 
-  async create(res, req) {
+  async create(req, res) {
     try {
       const { title, text, _id } = req.body;
       const post = await Post.findOne({ title });
