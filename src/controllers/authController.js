@@ -5,11 +5,24 @@ const jwt = require('jsonwebtoken');
 // const { validationResult } = require('express-validator');
 require('dotenv').config();
 
-const generateAccesToken = (id, roles) => {
+/**
+ * генерируем токен
+ * создаем ассинхронную функцию login
+ * получаем пароль и логин
+ * ищем пользователя с похожим логином, если он есть то возвращаем ошибку
+ * сравниваем закешиованый код и введеный, если не совпадает возвращаем ошибку
+ * создаем токен
+ * выводим токен и роль
+ * делаем обработку ошибок еси они есть
+ */
+
+const generateAccesToken = (id, role) => {
   const payload = {
     id,
-    roles,
+    role,
   };
+
+  console.log(generateAccesToken);
 
   return jwt.sign(payload, process.env.MY_SECRET_KEY);
 };
@@ -33,8 +46,9 @@ class authController {
         return res.status(400).json({ message: `Неверный пароль` });
       }
 
-      const token = generateAccesToken(user._id, user.roles);
-      return res.json({ token });
+      const token = generateAccesToken(user._id, user.role);
+
+      return res.json({ token, role: user.role });
     } catch (e) {
       console.log(e);
       res.status(400).json({ message: 'Login error' });

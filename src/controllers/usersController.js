@@ -3,13 +3,28 @@ const Role = require('../models/Role');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 require('dotenv').config();
+/**
+ * создаем ассинхронную функцию регистрации 
+ * получаем ошибки если они есть
+ * проверяем пустой или нет массив из ошибок, если нет возвращаем ошибку
+ * берем данные с сервера
+ * проверяем на логин и майл, если они есть возвращаем ошибку
+ * кэшируем пароль
+ * создаем нового юзера
+ * сохраняем его
+ * отправлеям сообщение об успешной регистрации
+ * создаем ассинхронную фунцию получения юзеров
+ * находим всех юзеров которые есть
+ * отправляем их в запросе
+ * если есть ошибки в первой или второй функции возвращаем их  в катче
+ */
 
 class usersController {
   async registration(req, res) {
     try {
-      const errros = validationResult(req);
+      const errors = validationResult(req);
 
-      if (!errros.isEmpty()) {
+      if (!errors.isEmpty()) {
         return res
           .status(400)
           .json({ message: 'Ошибка при регистрации', errors });
@@ -34,14 +49,14 @@ class usersController {
       }
 
       const hashPassword = bcrypt.hashSync(password, 7);
-      const userRole = await Role.findOne({ value: 'USER' });
+
       const user = new User({
         username,
         password: hashPassword,
         name,
         surname,
         mail,
-        roles: [userRole.value],
+        role: 'USER',
       });
       await user.save();
       return res.json({ message: 'Пользователь успешно зарегистрирован' });
@@ -52,6 +67,7 @@ class usersController {
   }
 
   async getUsers(req, res) {
+
     try {
       const users = await User.find();
 
