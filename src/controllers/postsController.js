@@ -3,6 +3,8 @@ const Role = require('../models/Role');
 const Post = require('../models/Post');
 const jwt = require('jsonwebtoken');
 
+sdasdasd;
+
 class postsController {
   async findAll(req, res) {
     try {
