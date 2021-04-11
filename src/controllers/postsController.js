@@ -17,7 +17,7 @@ class postsController {
 
   async create(req, res) {
     try {
-      const { title, text, } = req.body;
+      const { title, text } = req.body;
       const post = await Post.findOne({ title });
 
       if (post) {
@@ -25,16 +25,16 @@ class postsController {
           .status(400)
           .json({ message: 'Пост с таким заголовком уже существует' });
       }
-      
+
       const token = req.headers.authorization.split(' ')[1];
       req.user = jwt.verify(token, process.env.MY_SECRET_KEY);
 
-      const user = await User.findById(req.user._id);
+      const user = await User.findById(req.user.id);
 
       const newPost = new Post({
         title,
         text,
-        author: {...user},
+        author: { ...user },
       });
       await newPost.save();
       return res.json({ message: 'Пост успешно добавлен' });

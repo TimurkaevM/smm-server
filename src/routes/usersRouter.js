@@ -18,7 +18,7 @@ router.post(
     check(
       'password',
       'пароль не может быть меньше 4 и больше 10 символов',
-    ).isLength({ min: 4, max: 10 }),
+    ).isLength({ min: 4, max: 15 }),
   ],
   usersController.registration,
 );
