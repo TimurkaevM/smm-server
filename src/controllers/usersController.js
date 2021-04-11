@@ -2,9 +2,12 @@ const User = require('../models/User');
 const Role = require('../models/Role');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
+const nodemailer = require('nodemailer');
+const mailer = require('../../nodemailer');
+
 require('dotenv').config();
 /**
- * создаем ассинхронную функцию регистрации 
+ * создаем ассинхронную функцию регистрации
  * получаем ошибки если они есть
  * проверяем пустой или нет массив из ошибок, если нет возвращаем ошибку
  * берем данные с сервера
@@ -50,7 +53,7 @@ class usersController {
 
       const hashPassword = bcrypt.hashSync(password, 7);
 
-      const user = new User({
+      const newUser = new User({
         username,
         password: hashPassword,
         name,
@@ -58,7 +61,28 @@ class usersController {
         mail,
         role: 'USER',
       });
-      await user.save();
+      await newUser.save();
+
+      const message = {
+        to: newUser.mail,
+        subject: 'Congratulations! You are successfuly registred on oyr site.',
+        html: `
+          <h2>Поздравляем вы были добавлены в smm-блокнот Миланы Сиевой!</h2>
+
+          <i>Данные вашей учетной записи:</i>
+
+          <ul>
+            <li>username: ${username},</li>
+            <li>password: ${password}</li>
+          </ul>
+
+          <h4>Перейти в smm-блокнот можно по ссылке:</h4>
+          <a href="#">Ссылка</a>
+        `,
+      };
+
+      mailer(message);
+
       return res.json({ message: 'Пользователь успешно зарегистрирован' });
     } catch (e) {
       console.log(e);
@@ -67,7 +91,6 @@ class usersController {
   }
 
   async getUsers(req, res) {
-
     try {
       const users = await User.find();
 
