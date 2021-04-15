@@ -4,21 +4,6 @@ const { validationResult } = require('express-validator');
 const mailer = require('../nodemailer/nodemailer');
 
 require('dotenv').config();
-/**
- * создаем ассинхронную функцию регистрации
- * получаем ошибки если они есть
- * проверяем пустой или нет массив из ошибок, если нет возвращаем ошибку
- * берем данные с сервера
- * проверяем на логин и майл, если они есть возвращаем ошибку
- * кэшируем пароль
- * создаем нового юзера
- * сохраняем его
- * отправлеям сообщение об успешной регистрации
- * создаем ассинхронную фунцию получения юзеров
- * находим всех юзеров которые есть
- * отправляем их в запросе
- * если есть ошибки в первой или второй функции возвращаем их  в катче
- */
 
 class usersController {
   async registration(req, res) {
@@ -139,13 +124,13 @@ class usersController {
 
   async deleteUser(req, res) {
     try {
-      const delUser = await User.findById(req.params.id);
+      const user = await User.findById(req.params.id);
 
-      if (!delUser) {
+      if (!user) {
         return res.status(400).json({ message: 'Пользователь не найден' });
       }
 
-      await delUser.remove();
+      await user.remove();
 
       return res.json({ message: 'Пользователь удален' });
     } catch (e) {

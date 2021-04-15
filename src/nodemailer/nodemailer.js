@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport(
     },
   },
   {
-    from: 'Milana Sieva <timurkaev2911@mail.ru>',
+    from: 'Milana Asieva <timurkaev2911@mail.ru>',
   },
 );
 

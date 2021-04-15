@@ -5,12 +5,6 @@ const { check } = require('express-validator');
 const authMiddleware = require('../middlewares/authMiddleware');
 const roleMiddleware = require('../middlewares/roleMiddleware');
 
-/**
- * делаем get and post  запрос по адрессу users и принимаем Функции из контролера
- * добавляем проверку check по имени и паролю в гет
- * добавляем проверку по авторизации в пост
- */
-
 router.post(
   '/users',
   [
