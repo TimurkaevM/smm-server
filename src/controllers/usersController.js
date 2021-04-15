@@ -1,9 +1,7 @@
 const User = require('../models/User');
-const Role = require('../models/Role');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
-const nodemailer = require('nodemailer');
-const mailer = require('../../nodemailer');
+const mailer = require('../nodemailer/nodemailer');
 
 require('dotenv').config();
 /**
@@ -67,7 +65,7 @@ class usersController {
         to: newUser.mail,
         subject: 'Congratulations! You are successfuly registred on oyr site.',
         html: `
-          <h2>Поздравляем вы были добавлены в smm-блокнот Миланы Сиевой!</h2>
+          <h2>Поздравляем вы были добавлены в smm-блокнот Миланы Асиевой!</h2>
 
           <i>Данные вашей учетной записи:</i>
 
@@ -97,6 +95,62 @@ class usersController {
       res.json(users);
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async getOneUser(req, res) {
+    try {
+      const user = await User.findById(req.params.id);
+
+      if (!user) {
+        return res.status(400).json({ message: 'Пользователь не найден' });
+      }
+
+      res.json(user);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async updateUser(req, res) {
+    try {
+      const { username, password, name, surname, mail } = req.body;
+
+      const user = await User.findById(req.params.id);
+
+      if (!user) {
+        return res.status(400).json({ message: 'Пользователь не найден' });
+      }
+
+      const hashPassword = bcrypt.hashSync(password, 7);
+
+      await user.update({
+        username,
+        password: hashPassword,
+        name,
+        surname,
+        mail,
+      });
+      return res.json({ message: 'Пользователен успешно изменен' });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async deleteUser(req, res) {
+    try {
+      const delUser = await User.findById(req.params.id);
+
+      if (!delUser) {
+        return res.status(400).json({ message: 'Пользователь не найден' });
+      }
+
+      await delUser.remove();
+
+      return res.json({ message: 'Пользователь удален' });
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({ message: 'Deleting error' });
     }
   }
 }
