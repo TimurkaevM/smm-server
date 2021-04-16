@@ -59,15 +59,18 @@ class postsController {
 
   async update(req, res) {
     try {
-      const { title, text } = req.body;
+      const { title, text, author } = req.body;
 
-      const post = await Post.findById(req.params.id);
+      const post = await Post.findById(req.params.id).populate(
+        'author',
+        'surname name mail',
+      );
 
       if (!post) {
         return res.status(400).json({ message: 'Пост не найден' });
       }
 
-      await post.update({ text, title });
+      await post.update({ text, title, author });
 
       return res.json({ message: 'Пост изменен' });
     } catch (e) {
