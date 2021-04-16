@@ -75,7 +75,7 @@ class usersController {
 
   async getUsers(req, res) {
     try {
-      const users = await User.find();
+      const users = await User.find().select('name surname mail');
 
       res.json(users);
     } catch (e) {
@@ -85,7 +85,9 @@ class usersController {
 
   async getOneUser(req, res) {
     try {
-      const user = await User.findById(req.params.id);
+      const user = await User.findById(req.params.id).select(
+        'name surname mail',
+      );
 
       if (!user) {
         return res.status(400).json({ message: 'Пользователь не найден' });

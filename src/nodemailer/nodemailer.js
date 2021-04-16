@@ -2,16 +2,16 @@ const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport(
   {
-    host: 'smtp.mail.ru',
-    port: 465,
+    host: process.env.MY_MAIL_HOST,
+    port: process.env.MY_MAIL_PORT,
     secure: true,
     auth: {
-      user: 'timurkaev2911@mail.ru',
-      pass: '1593572648tmr',
+      user: `${process.env.MY_MAIL}`,
+      pass: process.env.MY_PASS,
     },
   },
   {
-    from: 'Milana Asieva <timurkaev2911@mail.ru>',
+    from: `Milana Asieva <${process.env.MY_MAIL}>`,
   },
 );
 
