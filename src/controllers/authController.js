@@ -9,8 +9,6 @@ const generateAccesToken = (id, role) => {
     role,
   };
 
-  console.log(generateAccesToken);
-
   return jwt.sign(payload, process.env.MY_SECRET_KEY);
 };
 
