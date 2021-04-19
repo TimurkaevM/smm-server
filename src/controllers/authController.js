@@ -33,7 +33,36 @@ class authController {
 
       const token = generateAccesToken(user._id, user.role);
 
-      return res.json({ token, role: user.role });
+      return res.json({
+        token,
+        user: {
+          name: user.name,
+          surname: user.surname,
+          mail: user.mail,
+          role: user.role,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({ message: 'Login error' });
+    }
+  }
+
+  async getlog(req, res) {
+    try {
+      const user = await User.findOne({ _id: req.user.id });
+
+      const token = generateAccesToken(user._id, user.role);
+
+      return res.json({
+        token,
+        user: {
+          name: user.name,
+          surname: user.surname,
+          mail: user.mail,
+          role: user.role,
+        },
+      });
     } catch (e) {
       console.log(e);
       res.status(400).json({ message: 'Login error' });
