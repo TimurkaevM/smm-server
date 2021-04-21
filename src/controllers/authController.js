@@ -46,7 +46,7 @@ class authController {
     }
   }
 
-  async getlog(req, res) {
+  async getlogin(req, res) {
     try {
       const user = await User.findOne({ _id: req.user.id });
 
@@ -64,6 +64,22 @@ class authController {
     } catch (e) {
       console.log(e);
       res.status(400).json({ message: 'Login error' });
+    }
+  }
+
+  async checkToken(req, res) {
+    try {
+      const { token } = req.body;
+      const findToken = req.headers.authorization.split(' ')[1];
+
+      if (token !== findToken) {
+        return res.status(400).json({ message: 'Error' });
+      }
+
+      return res.status(200).json(findToken);
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({ message: 'Check error' });
     }
   }
 }
