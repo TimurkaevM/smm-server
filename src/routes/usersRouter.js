@@ -4,7 +4,6 @@ const usersController = require('../controllers/usersController');
 const { check } = require('express-validator');
 const authMiddleware = require('../middlewares/authMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
-const userMiddleware = require('../middlewares/userMiddleware');
 
 router.post(
   '/users',
@@ -14,16 +13,17 @@ router.post(
       'password',
       'пароль не может быть меньше 4 и больше 10 символов',
     ).isLength({ min: 4, max: 15 }),
+    adminMiddleware,
   ],
   usersController.registration,
 );
 
-router.get('/users', usersController.getUsers);
+router.get('/users', adminMiddleware, usersController.getUsers);
 
-router.get('/users/:id', usersController.getOneUser);
+router.get('/users/:id', authMiddleware, usersController.getOneUser);
 
-router.patch('/users/:id', usersController.updateUser);
+router.patch('/users/:id', adminMiddleware, usersController.updateUser);
 
-router.delete('/users/:id', usersController.deleteUser);
+router.delete('/users/:id', adminMiddleware, usersController.deleteUser);
 
 module.exports = router;
