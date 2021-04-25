@@ -4,10 +4,13 @@ const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
 class postsController {
+  //Функция получения всех постов
   async findAll(req, res) {
     try {
+      //Поиск всех постов в БД
       const post = await Post.find().populate('author', 'surname name mail');
 
+      //Отправляем в запросе найденные посты
       res.status(200).json(post);
     } catch (e) {
       console.log(e);
@@ -15,13 +18,21 @@ class postsController {
     }
   }
 
+  //Функция получения одного поста
   async findOne(req, res) {
     try {
+      //Поиск одного поста в БД по айди
       const post = await Post.findById(req.params.id).populate(
         'author',
         'surname name mail',
       );
 
+      //Проверка, если пост не найден выводим ошибку
+      if (!post) {
+        return res.status(404).json({ message: 'Пост не найден' });
+      }
+
+      //Отправляем в запросе найденный пост
       res.status(200).json(post);
     } catch (e) {
       console.log(e);
@@ -29,8 +40,10 @@ class postsController {
     }
   }
 
+  //Функция добавления поста
   async create(req, res) {
     try {
+      //Получаем все ошибки валидности, если они есть, выводим их
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
@@ -39,26 +52,32 @@ class postsController {
           .json({ message: 'Ошибка при создание поста', errors });
       }
 
+      //Полчаем заголовок и текс поста
       const { title, text } = req.body;
+      //Находим пост по одному параметру title
       const post = await Post.findOne({ title });
 
+      //Проверка, есть ли пост с таким заголовком
       if (post) {
         return res
           .status(409)
           .json({ message: 'Пост с таким заголовком уже существует' });
       }
 
-      const token = req.headers.authorization.split(' ')[1];
-      req.user = jwt.verify(token, process.env.MY_SECRET_KEY);
+      //Получаем пользователя создавшего пост
+      const user = await User.findOne({ _id: req.user.id });
 
-      const user = await User.findById(req.user.id);
-
+      // Создаем новый пост с информацией о пользователе
       const newPost = new Post({
         title,
         text,
         author: { ...user },
       });
+
+      //Cохраняем пост в БД
       await newPost.save();
+
+      //Отправляем сообщение об успешном добавлении поста
       return res.json({ message: 'Пост успешно добавлен' });
     } catch (e) {
       console.log(e);
@@ -66,27 +85,34 @@ class postsController {
     }
   }
 
+  //Функция изменения поста
   async updatePost(req, res) {
     try {
+      //Получаем данные
       const { title, text, draft } = req.body;
 
+      //Находим пост по айди
       const post = await Post.findById(req.params.id).populate(
         'author',
         'surname name mail',
       );
 
+      //Находим пользователя по айди
       const user = await User.findOne({ _id: req.user.id });
 
+      //Проверка, если пост не найден выводим ошибку
       if (!post) {
         return res.status(404).json({ message: 'Пост не найден' });
       }
 
+      //Проверка. Только пользователь добавивший пост и админ могут изменять его
       if (post.author._id !== user._id && user.role !== 'ADMIN') {
         return res
           .status(403)
           .json({ message: 'Вы не можете редактировать этот пост' });
       }
 
+      //Изменение поста
       await post.update({
         text: !text ? post.text : text,
         title: !title ? post.title : title,
@@ -94,6 +120,7 @@ class postsController {
         author: post.author,
       });
 
+      //Отправляем сообщение об успехе операции
       return res.status(200).json({ message: 'Пост изменен' });
     } catch (e) {
       console.log(e);
@@ -101,24 +128,31 @@ class postsController {
     }
   }
 
+  //Функция удаления поста
   async destroy(req, res) {
     try {
+      //Находим пост по айди
       const post = await Post.findById(req.params.id);
 
+      //Находим пользователя по айди
       const user = await User.findOne({ _id: req.user.id });
 
+      //Проверка, если пост не найден выводим ошибку
       if (!post) {
         return res.status(404).json({ message: 'Пост не найден' });
       }
 
+      //Проверка. Только пользователь добавивший пост и админ могут удалять его
       if (post.author._id !== user._id && user.role !== 'ADMIN') {
         return res
           .status(403)
           .json({ message: 'Вы не можете удолить этот пост' });
       }
 
+      //Удаление поста
       await post.remove();
 
+      //Отправляем сообщение об успехе операции
       return res.json({ message: 'Пост успешно удален' });
     } catch (e) {
       console.log(e);

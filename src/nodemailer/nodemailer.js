@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 
+//создаем транспортер для отправкки на майл
 const transporter = nodemailer.createTransport(
   {
     host: process.env.MY_MAIL_HOST,
@@ -15,6 +16,7 @@ const transporter = nodemailer.createTransport(
   },
 );
 
+//Функция, которая параметром принимает сообщение и оптравляет его
 const mailer = (message) => {
   transporter.sendMail(message, (err, info) => {
     if (err) return console.log(err);

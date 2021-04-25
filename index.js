@@ -5,21 +5,13 @@ const usersRouter = require('./src/routes/usersRouter');
 const postRoutes = require('./src/routes/postRouter');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const corsMiddleware = require('./src/middlewares/corsMiddleware');
 
 require('dotenv').config();
 
 const app = express();
 
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*'); // update to match the domain you will make the request from
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-  );
-  res.header('Access-Control-Allow-Methods', '*');
-  next();
-});
-
+app.use(corsMiddleware);
 app.use(express.json());
 app.use('/smm', usersRouter);
 app.use('/smm', authRouter);
