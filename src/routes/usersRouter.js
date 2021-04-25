@@ -18,12 +18,20 @@ router.post(
   usersController.registration,
 );
 
-router.get('/users', adminMiddleware, usersController.getUsers);
+router.get('/users', authMiddleware, usersController.getUsers);
 
 router.get('/users/:id', authMiddleware, usersController.getOneUser);
 
-router.patch('/users/:id', adminMiddleware, usersController.updateUser);
+router.patch(
+  '/users/:id',
+  [authMiddleware, adminMiddleware],
+  usersController.updateUser,
+);
 
-router.delete('/users/:id', adminMiddleware, usersController.deleteUser);
+router.delete(
+  '/users/:id',
+  [authMiddleware, adminMiddleware],
+  usersController.deleteUser,
+);
 
 module.exports = router;

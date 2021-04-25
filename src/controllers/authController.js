@@ -20,18 +20,18 @@ class authController {
       const user = await User.findOne({ username });
 
       if (!user) {
-        return res.status(400).json({ message: `Пользователь не найден` });
+        return res.status(404).json({ message: `Пользователь не найден` });
       }
 
       const validPassword = bcrypt.compareSync(password, user.password);
 
       if (!validPassword) {
-        return res.status(400).json({ message: `Неверный пароль` });
+        return res.status(401).json({ message: `Неверный пароль` });
       }
 
       const token = generateAccesToken(user._id, user.role);
 
-      return res.json({
+      return res.status(200).json({
         token,
         user: {
           name: user.name,
@@ -42,28 +42,7 @@ class authController {
       });
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: 'Login error' });
-    }
-  }
-
-  async getlogin(req, res) {
-    try {
-      const user = await User.findOne({ _id: req.user.id });
-
-      const token = generateAccesToken(user._id, user.role);
-
-      return res.json({
-        token,
-        user: {
-          name: user.name,
-          surname: user.surname,
-          mail: user.mail,
-          role: user.role,
-        },
-      });
-    } catch (e) {
-      console.log(e);
-      res.status(400).json({ message: 'Login error' });
+      res.status(401).json({ message: 'Login error' });
     }
   }
 
@@ -73,13 +52,13 @@ class authController {
       const findToken = req.headers.authorization.split(' ')[1];
 
       if (token !== findToken) {
-        return res.status(400).json({ message: 'Error' });
+        return res.status(401).json({ message: 'Error' });
       }
 
-      return res.status(200).json(findToken);
+      return res.status(200).json(true);
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: 'Check error' });
+      res.status(401).json({ message: 'Check error' });
     }
   }
 }

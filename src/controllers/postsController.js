@@ -1,16 +1,17 @@
 const User = require('../models/User');
 const Post = require('../models/Post');
 const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
 
 class postsController {
   async findAll(req, res) {
     try {
       const post = await Post.find().populate('author', 'surname name mail');
 
-      res.json(post);
+      res.status(200).json(post);
     } catch (e) {
       console.log(e);
-      res.status(403).json({ message: 'Eror...' });
+      res.status(404).json({ message: 'Eror...' });
     }
   }
 
@@ -21,21 +22,29 @@ class postsController {
         'surname name mail',
       );
 
-      res.json(post);
+      res.status(200).json(post);
     } catch (e) {
       console.log(e);
-      res.status(403).json({ message: 'Eror...' });
+      res.status(404).json({ message: 'Eror...' });
     }
   }
 
   async create(req, res) {
     try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res
+          .status(417)
+          .json({ message: 'Ошибка при создание поста', errors });
+      }
+
       const { title, text } = req.body;
       const post = await Post.findOne({ title });
 
       if (post) {
         return res
-          .status(400)
+          .status(409)
           .json({ message: 'Пост с таким заголовком уже существует' });
       }
 
@@ -53,29 +62,42 @@ class postsController {
       return res.json({ message: 'Пост успешно добавлен' });
     } catch (e) {
       console.log(e);
-      res.status(403).json({ message: 'Eror...' });
+      res.status(409).json({ message: 'Eror...' });
     }
   }
 
-  async update(req, res) {
+  async updatePost(req, res) {
     try {
-      const { title, text, author } = req.body;
+      const { title, text, draft } = req.body;
 
       const post = await Post.findById(req.params.id).populate(
         'author',
         'surname name mail',
       );
 
+      const user = await User.findOne({ _id: req.user.id });
+
       if (!post) {
-        return res.status(400).json({ message: 'Пост не найден' });
+        return res.status(404).json({ message: 'Пост не найден' });
       }
 
-      await post.update({ text, title, author });
+      if (post.author._id !== user._id && user.role !== 'ADMIN') {
+        return res
+          .status(403)
+          .json({ message: 'Вы не можете редактировать этот пост' });
+      }
 
-      return res.json({ message: 'Пост изменен' });
+      await post.update({
+        text: !text ? post.text : text,
+        title: !title ? post.title : title,
+        draft: draft === null ? post.draft : draft,
+        author: post.author,
+      });
+
+      return res.status(200).json({ message: 'Пост изменен' });
     } catch (e) {
       console.log(e);
-      res.status(403).json({ message: 'Eror...' });
+      res.status(409).json({ message: 'Eror...' });
     }
   }
 
@@ -83,8 +105,16 @@ class postsController {
     try {
       const post = await Post.findById(req.params.id);
 
+      const user = await User.findOne({ _id: req.user.id });
+
       if (!post) {
-        return res.status(400).json({ message: 'Пост не найден' });
+        return res.status(404).json({ message: 'Пост не найден' });
+      }
+
+      if (post.author._id !== user._id && user.role !== 'ADMIN') {
+        return res
+          .status(403)
+          .json({ message: 'Вы не можете удолить этот пост' });
       }
 
       await post.remove();
@@ -92,7 +122,7 @@ class postsController {
       return res.json({ message: 'Пост успешно удален' });
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: 'Deleting error' });
+      res.status(409).json({ message: 'Deleting error' });
     }
   }
 }

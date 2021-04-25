@@ -12,7 +12,7 @@ class usersController {
 
       if (!errors.isEmpty()) {
         return res
-          .status(400)
+          .status(417)
           .json({ message: 'Ошибка при регистрации', errors });
       }
 
@@ -22,7 +22,7 @@ class usersController {
 
       if (condidate) {
         return res
-          .status(400)
+          .status(417)
           .json({ mesagge: 'Пользователь с таким именем существует' });
       }
 
@@ -30,7 +30,7 @@ class usersController {
 
       if (condidateMail) {
         return res
-          .status(400)
+          .status(417)
           .json({ mesagge: `Пользователь с таким ${user.mail} существует` });
       }
 
@@ -66,7 +66,9 @@ class usersController {
 
       mailer(message);
 
-      return res.json({ message: 'Пользователь успешно зарегистрирован' });
+      return res
+        .status(200)
+        .json({ message: 'Пользователь успешно зарегистрирован' });
     } catch (e) {
       console.log(e);
       res.status(400).json({ message: 'Registration error' });
@@ -77,9 +79,10 @@ class usersController {
     try {
       const users = await User.find().select('name surname mail');
 
-      res.json(users);
+      res.status(200).json(users);
     } catch (e) {
       console.log(e);
+      res.status(404).json({ message: 'Users not found' });
     }
   }
 
@@ -90,10 +93,10 @@ class usersController {
       );
 
       if (!user) {
-        return res.status(400).json({ message: 'Пользователь не найден' });
+        return res.status(404).json({ message: 'Пользователь не найден' });
       }
 
-      res.json(user);
+      res.status(200).json(user);
     } catch (e) {
       console.log(e);
     }
@@ -106,7 +109,7 @@ class usersController {
       const user = await User.findById(req.params.id);
 
       if (!user) {
-        return res.status(400).json({ message: 'Пользователь не найден' });
+        return res.status(404).json({ message: 'Пользователь не найден' });
       }
 
       const hashPassword = bcrypt.hashSync(password, 7);
@@ -129,7 +132,7 @@ class usersController {
       const user = await User.findById(req.params.id);
 
       if (!user) {
-        return res.status(400).json({ message: 'Пользователь не найден' });
+        return res.status(404).json({ message: 'Пользователь не найден' });
       }
 
       await user.remove();
