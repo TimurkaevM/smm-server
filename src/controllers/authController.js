@@ -63,9 +63,10 @@ class authController {
       const { token } = req.body;
       //Принимаем токен из заголовков
       const findToken = req.headers.authorization.split(' ')[1];
+      req.user = jwt.verify(findToken, process.env.MY_SECRET_KEY);
 
       //Проверка, полученныз токенов
-      if (token !== findToken) {
+      if (token !== req.user.token) {
         return res.status(401).json({ message: 'Error' });
       }
 
