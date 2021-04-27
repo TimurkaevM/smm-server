@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const cors = require('cors');
 const corsMiddleware = require('./src/middlewares/corsMiddleware');
 
@@ -12,6 +13,9 @@ const app = express();
 // Парсинг
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Подключение morgan
+app.use(morgan('combined'));
 
 // Подключение cors и corsMiddleware
 app.use(cors());
