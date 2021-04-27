@@ -1,39 +1,39 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const authRouter = require('./src/routes/authRouter');
-const usersRouter = require('./src/routes/usersRouter');
-const postRoutes = require('./src/routes/postRouter');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const corsMiddleware = require('./src/middlewares/corsMiddleware');
 
+// Подключение .env файла
 require('dotenv').config();
 
+// Подключение express
 const app = express();
 
-app.use(corsMiddleware);
+// Парсинг
 app.use(express.json());
-app.use('/smm', usersRouter);
-app.use('/smm', authRouter);
-app.use('/smm', postRoutes);
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
 
-async function start() {
+// Подключение cors и corsMiddleware
+app.use(cors());
+app.use(corsMiddleware);
+
+// Подключение роутов
+app.use('/smm', require('./src/routes'));
+
+(async function () {
   try {
+    // подключение БД
     await mongoose.connect(process.env.MY_BASE, {
       useFindAndModify: false,
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
+    // слушатель порта
     app.listen(process.env.MY_PORT, () => {
-      console.log(`Server has been started on port: ${process.env.MY_PORT}`);
+      console.log(`Server has been starts on port: ${process.env.MY_PORT}`);
     });
   } catch (e) {
     console.log(e);
   }
-}
-
-start();
+})();

@@ -1,13 +1,14 @@
 const Router = require('express');
-const router = new Router();
 const postsController = require('../controllers/postsController');
 const authMiddleware = require('../middlewares/authMiddleware');
 const userMiddleware = require('../middlewares/userMiddleware');
 const { check } = require('express-validator');
 
-router.get('/posts', authMiddleware, postsController.findAll);
+const router = new Router();
+
+router.get('/', authMiddleware, postsController.findAll);
 router.post(
-  '/posts',
+  '/',
   [
     check('title', 'Заголовок поста не может быть пустым').notEmpty(),
     check('text', 'Содержимое поста не может быть пустым').notEmpty(),
@@ -17,8 +18,8 @@ router.post(
   postsController.create,
 );
 
-router.get('/posts/:id', authMiddleware, postsController.findOne);
-router.patch('/posts/:id', authMiddleware, postsController.updatePost);
-router.delete('/posts/:id', authMiddleware, postsController.destroy);
+router.get('/:id', authMiddleware, postsController.findOne);
+router.patch('/:id', authMiddleware, postsController.updatePost);
+router.delete('/:id', authMiddleware, postsController.destroy);
 
 module.exports = router;

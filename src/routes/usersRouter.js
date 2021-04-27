@@ -6,7 +6,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
 
 router.post(
-  '/users',
+  '/',
   [
     check('username', 'Имя пользователя не может быть пустым').notEmpty(),
     check(
@@ -18,18 +18,18 @@ router.post(
   usersController.registration,
 );
 
-router.get('/users', authMiddleware, usersController.getUsers);
+router.get('/', authMiddleware, usersController.getUsers);
 
-router.get('/users/:id', authMiddleware, usersController.getOneUser);
+router.get('/:id', authMiddleware, usersController.getOneUser);
 
 router.patch(
-  '/users/:id',
+  '/:id',
   [authMiddleware, adminMiddleware],
   usersController.updateUser,
 );
 
 router.delete(
-  '/users/:id',
+  '/:id',
   [authMiddleware, adminMiddleware],
   usersController.deleteUser,
 );

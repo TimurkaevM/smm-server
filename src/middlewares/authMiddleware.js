@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 module.exports = (req, res, next) => {
   //Проверка метода
@@ -8,10 +7,8 @@ module.exports = (req, res, next) => {
   }
 
   try {
-    //Получение типа токена
-    const bearer = req.headers.authorization.split(' ')[0];
-    //Получение токена
-    const token = req.headers.authorization.split(' ')[1];
+    //Получаем токен и его тип
+    const [bearer, token] = req.headers.authorization.split(' ');
 
     //Проверка типа токена
     if (bearer !== 'Bearer') {

@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-//создаем транспортер для отправкки на майл
+//создаем транспортер для отправки на майл
 const transporter = nodemailer.createTransport(
   {
     pool: true,
