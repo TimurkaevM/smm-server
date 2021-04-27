@@ -24,7 +24,7 @@ transporter.verify((error, success) => {
     : console.log('Server is ready to take our messages: ', success);
 });
 
-//Функция, которая параметром принимает сообщение и оптравляет его
+//Функция, которая параметром принимает сообщение и отправляет его
 const mailer = (message) => {
   transporter.sendMail(message, (err, info) => {
     if (err) return console.log(err);
