@@ -12,5 +12,5 @@
 | GET/posts       | получение списка постов             |
 | POST/posts      | добавление нового поста             |
 | GET/posts/id    | получение поста по ID               |
-| PATCH/posts     | изменение поста по ID               |
-| DELETE/posts    | удаление поста по ID                |
+| PATCH/posts/id  | изменение поста по ID               |
+| DELETE/posts/id | удаление поста по ID                |
