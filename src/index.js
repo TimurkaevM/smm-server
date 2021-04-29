@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
-const corsMiddleware = require('./src/middlewares/corsMiddleware');
+const corsMiddleware = require('./middlewares/corsMiddleware');
 
 // Подключение .env файла
 require('dotenv').config();
@@ -22,7 +22,7 @@ app.use(cors());
 app.use(corsMiddleware);
 
 // Подключение роутов
-app.use('/smm', require('./src/routes'));
+app.use('/smm', require('./routes'));
 
 (async function () {
   try {
