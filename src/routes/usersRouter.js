@@ -11,8 +11,9 @@ router.post(
     check('username', 'Имя пользователя не может быть пустым').notEmpty(),
     check(
       'password',
-      'пароль не может быть меньше 4 и больше 10 символов',
+      'пароль не может быть меньше 4 и больше 15 символов',
     ).isLength({ min: 4, max: 15 }),
+    authMiddleware,
     adminMiddleware,
   ],
   usersController.registration,
