@@ -142,7 +142,9 @@ async function destroy(req, res) {
 
     // Проверка. Только пользователь добавивший пост и админ могут удалять его
     if (post.author._id !== user._id && user.role !== 'ADMIN') {
-      res.status(403).json({ message: 'Вы не можете удалить этот пост' });
+      return res
+        .status(403)
+        .json({ message: 'Вы не можете удалить этот пост' });
     }
 
     // Удаление поста

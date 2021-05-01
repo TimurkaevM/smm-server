@@ -29,10 +29,6 @@ router.patch(
   usersController.updateUser,
 );
 
-router.delete(
-  '/:id',
-  [authMiddleware, adminMiddleware],
-  usersController.deleteUser,
-);
+router.delete('/:id', [authMiddleware], usersController.deleteUser);
 
 module.exports = router;
