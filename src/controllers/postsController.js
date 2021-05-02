@@ -130,7 +130,7 @@ async function updatePost(req, res) {
 async function destroy(req, res) {
   try {
     // Находим пост по айди
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findOne({ _id: req.params.id });
 
     // Находим пользователя по айди
     const user = await User.findOne({ _id: req.user.id });
@@ -141,13 +141,13 @@ async function destroy(req, res) {
     }
 
     // Проверка. Только пользователь добавивший пост и админ могут удалять его
-    if (post.author._id !== user._id && user.role !== 'ADMIN') {
+    if (post.author._id != req.user.id) {
       return res
         .status(403)
-        .json({ message: 'Вы не можете удалить этот пост' });
+        .json({ message: 'Вы не можете удалить данный пост' });
     }
 
-    // Удаление поста
+    // Удаление поста 608dcc84db54e43e6fdea3ae  608dcc84db54e43e6fdea3ae
     await post.remove();
 
     // Отправляем сообщение об успехе операции
