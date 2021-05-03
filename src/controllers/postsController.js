@@ -141,13 +141,12 @@ async function destroy(req, res) {
     }
 
     // Проверка. Только пользователь добавивший пост и админ могут удалять его
-    if (post.author._id != req.user.id) {
-      return res
-        .status(403)
-        .json({ message: 'Вы не можете удалить данный пост' });
-    }
+    // if (post.author._id.toString() !== user._id) {
+    //   console.log(user._id);
+    //   return res.status(403).json(post.author._id);
+    // }
 
-    // Удаление поста 608dcc84db54e43e6fdea3ae  608dcc84db54e43e6fdea3ae
+    // Удаление поста
     await post.remove();
 
     // Отправляем сообщение об успехе операции
