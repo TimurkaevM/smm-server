@@ -103,12 +103,12 @@ async function updatePost(req, res) {
       return res.status(404).json({ message: 'Пост не найден' });
     }
 
-    // // Проверка. Только пользователь добавивший пост и админ могут изменять его
-    // if (post.author._id !== user._id && user.role !== 'ADMIN') {
-    //   return res
-    //     .status(403)
-    //     .json({ message: 'Вы не можете редактировать этот пост' });
-    // }
+    // Проверка. Только пользователь добавивший пост и админ могут изменять его
+    if (!post.author._id.equals(user._id)) {
+      return res
+        .status(403)
+        .json({ message: 'Вы не можете редактировать этот пост' });
+    }
 
     // Изменение поста
     await post.update({
@@ -131,9 +131,10 @@ async function destroy(req, res) {
   try {
     // Находим пост по айди
     const post = await Post.findById(req.params.id);
+    console.log(req.params);
 
     // Находим пользователя по айди
-    const user = await User.findOne({ _id: req.user.id });
+    const user = await User.findById(req.user.id);
 
     // Проверка, если пост не найден выводим ошибку
     if (!post) {
@@ -141,9 +142,9 @@ async function destroy(req, res) {
     }
 
     // Проверка. Только пользователь добавивший пост и админ могут удалять его
-    // if(post.author._id.equals(user._id)) {
-    //   return res.status(403).json(post.author._id.equals(user._id));
-    // }
+    if (!post.author._id.equals(user._id) && user.role !== 'ADMIN') {
+      return res.status(403).json({ message: 'У вас нет доступа' });
+    }
 
     // Удаление поста
     await post.remove();
