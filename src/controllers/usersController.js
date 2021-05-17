@@ -88,7 +88,7 @@ async function registration(req, res) {
 async function getUsers(req, res) {
   try {
     // Поиск пользователя
-    const users = await User.find().select('name surname mail');
+    const users = await User.find().select('name surname mail role');
 
     // Отправляем найденных пользователей
     res.status(200).json(users);
@@ -102,7 +102,9 @@ async function getUsers(req, res) {
 async function getOneUser(req, res) {
   try {
     // находим пользователя по айди
-    const user = await User.findById(req.params.id).select('name surname mail');
+    const user = await User.findById(req.params.id).select(
+      'name surname mail role',
+    );
 
     // Проверка, если пользователя нету выводим ошибку
     if (!user) {
