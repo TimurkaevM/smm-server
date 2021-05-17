@@ -21,7 +21,7 @@ async function create(req, res) {
 
     const post = await Post.findById(req.params.postID);
     console.log(post);
-    console.log(req.params.name);
+    console.log(req.params);
 
     const user = await User.findById(req.user.id);
     console.log(user);
