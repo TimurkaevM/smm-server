@@ -5,6 +5,7 @@ const router = Router();
 router.use('/', require('./authRouter'));
 router.use('/posts', require('./postRouter'));
 router.use('/users', require('./usersRouter'));
-router.use('/posts/:postID/comments', require('./commentRouter'));
+router.use('/', require('./commentRouter'));
+router.use('/', require('./tasksRouter'));
 
 module.exports = router;

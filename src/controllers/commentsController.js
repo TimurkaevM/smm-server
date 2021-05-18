@@ -2,11 +2,15 @@ const User = require('../models/User');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 
-async function findAll(req, res) {
+async function find(req, res) {
   try {
     const comment = await Comment.find().populate('author', 'username');
 
-    res.status(200).json(comment);
+    const filteredComments = comment.filter((item) =>
+      item.post.equals(req.params.postID),
+    );
+
+    res.status(200).json(filteredComments);
   } catch (e) {
     console.log(e);
     return res
@@ -21,10 +25,10 @@ async function create(req, res) {
 
     const post = await Post.findById(req.params.postID);
     console.log(post);
-    console.log(req.params);
+    console.log(req.params.postID);
 
     const user = await User.findById(req.user.id);
-    console.log(user);
+    console.log(req.user.id);
 
     const comment = new Comment({
       message,
@@ -43,4 +47,4 @@ async function create(req, res) {
   }
 }
 
-module.exports = { findAll, create };
+module.exports = { find, create };

@@ -2,9 +2,13 @@ const Router = require('express');
 const commentsController = require('../controllers/commentsController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
-const router = new Router({ mergeParams: true });
+const router = new Router();
 
-router.get('/', authMiddleware, commentsController.findAll);
-router.post('/', authMiddleware, commentsController.create);
+router.get('/posts/:postID/comments', authMiddleware, commentsController.find);
+router.post(
+  '/posts/:postID/comments',
+  authMiddleware,
+  commentsController.create,
+);
 
 module.exports = router;
