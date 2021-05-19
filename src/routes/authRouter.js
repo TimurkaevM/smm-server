@@ -4,7 +4,9 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = new Router();
 
+// Авторизация(все)
 router.post('/login', authController.login);
+// Проверка токена
 router.post('/autologin', authMiddleware, authController.checkToken);
 
 module.exports = router;

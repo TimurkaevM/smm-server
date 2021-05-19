@@ -3,15 +3,17 @@ const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const { validationResult } = require('express-validator');
 
+// Функция получения всех комментариев поста
 async function findAll(req, res) {
   try {
-    const comments = await Comment.find().populate('author', 'username');
-
-    const filteredComments = comments.filter((comment) =>
-      comment.post.equals(req.params.postID),
+    // получение всех комментариев поста
+    const comments = await Comment.find({ postId: req.params.postID }).populate(
+      'author',
+      'username',
     );
 
-    res.status(200).json(filteredComments);
+    //отправляем все найденные комментарии
+    res.status(200).json(comments);
   } catch (e) {
     console.log(e);
     return res
@@ -20,6 +22,7 @@ async function findAll(req, res) {
   }
 }
 
+// Функция добавления  комментариев
 async function createComment(req, res) {
   try {
     // Получаем все ошибки валидности, если они есть, выводим их
@@ -31,18 +34,23 @@ async function createComment(req, res) {
         .json({ message: 'Ошибка при создание комментария', errors });
     }
 
+    // Получаем комментарий
     const { message } = req.body;
 
+    // Получаем пост к которому добавляется комментарий
     const post = await Post.findById(req.params.postID);
 
+    // Получаем пользователя добавившего комментарий
     const user = await User.findById(req.user.id);
 
+    // Создаем комментарий
     const comment = new Comment({
       message,
       author: { ...user },
       postId: { ...post },
     });
 
+    // Сохраняем комментарий в БД
     await comment.save();
 
     res.status(200).json({ message: 'Комментарий успешно добавлен' });

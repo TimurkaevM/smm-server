@@ -6,6 +6,7 @@ const adminMiddleware = require('../middlewares/adminMiddleware');
 
 const router = new Router();
 
+// Добавление работника(админ)
 router.post(
   '/',
   [
@@ -20,16 +21,19 @@ router.post(
   usersController.registration,
 );
 
+// Получение всех работников(все)
 router.get('/', authMiddleware, usersController.getUsers);
-
+//Получение одного работника
 router.get('/:id', authMiddleware, usersController.getOneUser);
 
+// Изменение работника(админ)
 router.patch(
   '/:id',
   [authMiddleware, adminMiddleware],
   usersController.updateUser,
 );
 
+// Удаление работника(админ)
 router.delete(
   '/:id',
   [authMiddleware, adminMiddleware],

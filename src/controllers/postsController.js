@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 const { validationResult } = require('express-validator');
 
 // Функция получения всех постов
@@ -131,7 +132,6 @@ async function destroy(req, res) {
   try {
     // Находим пост по айди
     const post = await Post.findById(req.params.id);
-    console.log(req.params);
 
     // Находим пользователя по айди
     const user = await User.findById(req.user.id);
@@ -148,6 +148,9 @@ async function destroy(req, res) {
 
     // Удаление поста
     await post.remove();
+
+    // Удаление комментариев поста
+    await Comment.remove({ postId: req.params.id });
 
     // Отправляем сообщение об успехе операции
     return res.json({ message: 'Пост успешно удален' });

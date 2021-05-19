@@ -6,9 +6,12 @@ const { check } = require('express-validator');
 
 const router = new Router();
 
+// Получение всех постов(все)
 router.get('/', authMiddleware, postsController.findAll);
+// Получение одного поста(все)
 router.get('/:id', authMiddleware, postsController.findOne);
 
+// Добавление поста(работник)
 router.post(
   '/',
   [
@@ -20,12 +23,14 @@ router.post(
   postsController.create,
 );
 
+// Изменение поста(работник)
 router.patch(
   '/:id',
   [authMiddleware, userMiddleware],
   postsController.updatePost,
 );
 
+// Удаление поста(все)
 router.delete('/:id', authMiddleware, postsController.destroy);
 
 module.exports = router;
