@@ -5,8 +5,10 @@ const { check } = require('express-validator');
 
 const router = new Router();
 
+// Получение всех комментариев поста (все)
 router.get('/:postID/comments', authMiddleware, commentsController.findAll);
 
+// Добавление комментария к посту(все)
 router.post(
   '/:postID/comments',
   [
@@ -16,12 +18,14 @@ router.post(
   commentsController.createComment,
 );
 
+// Изменения комментария(все)
 router.patch(
   '/:postID/comments/:id',
   [authMiddleware],
   commentsController.updateComment,
 );
 
+// Удаления комментария(все)
 router.delete(
   '/:postID/comments/:id',
   [authMiddleware],
