@@ -20,7 +20,7 @@
 | DELETE/posts/:postID/comments/:id | удаление комментария | - |
 | GET/tasks | получение всех задач(админ) | - |
 | GET/users/:userID/tasks | получение всех задач одного работника  | - |
-| POST/users/:userID/tasks | добавление задачи(админ) | - |
+| POST/users/:userID/tasks | добавление задачи(админ) | message(String), time(Number) |
 | PATCH/tasks/:id | изменение задачи(админ)  | - |
 | PATCH/users/:userID/tasks/:id | изменение задачи(работник) | inWOrk(Boolean), completed(Boolean) |
 | DELETE/tasks/:id | удаление задачи(админ) | - |
