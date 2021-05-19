@@ -103,7 +103,7 @@ async function updatePost(req, res) {
       return res.status(404).json({ message: 'Пост не найден' });
     }
 
-    // Проверка. Только пользователь добавивший пост и админ могут изменять его
+    // Проверка. Только пользователь добавивший пост может изменить его
     if (!post.author._id.equals(user._id)) {
       return res
         .status(403)

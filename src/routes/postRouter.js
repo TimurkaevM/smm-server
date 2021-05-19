@@ -7,6 +7,7 @@ const { check } = require('express-validator');
 const router = new Router();
 
 router.get('/', authMiddleware, postsController.findAll);
+
 router.post(
   '/',
   [
@@ -19,7 +20,12 @@ router.post(
 );
 
 router.get('/:id', authMiddleware, postsController.findOne);
-router.patch('/:id', authMiddleware, postsController.updatePost);
+router.patch(
+  '/:id',
+  [authMiddleware, userMiddleware],
+  postsController.updatePost,
+);
+
 router.delete('/:id', authMiddleware, postsController.destroy);
 
 module.exports = router;

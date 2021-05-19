@@ -124,7 +124,7 @@ async function getOneUser(req, res) {
 // Функция изменения пользователя
 async function updateUser(req, res) {
   try {
-    // Получение пользователя
+    // Получение данных пользователя
     const { username, password, name, surname, mail } = req.body;
 
     // Поиск пользователя по айди
@@ -149,7 +149,7 @@ async function updateUser(req, res) {
     // Создаем сообщение для отправки на mail пользователя
     const message = {
       to: user.mail,
-      subject: 'Congratulations! You are successfully registered on oyr site.',
+      subject: 'Congratulations! Your data has been changed.',
       html: `
           <h2>Ваши данные были изменены!</h2>
 

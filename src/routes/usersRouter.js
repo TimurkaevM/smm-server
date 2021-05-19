@@ -1,9 +1,10 @@
 const Router = require('express');
-const router = new Router();
 const usersController = require('../controllers/usersController');
 const { check } = require('express-validator');
 const authMiddleware = require('../middlewares/authMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
+
+const router = new Router();
 
 router.post(
   '/',
