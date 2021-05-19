@@ -2,6 +2,9 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const mailer = require('../nodemailer/nodemailer');
 const User = require('../models/User');
+const Post = require('../models/Post');
+const Comment = require('../models/Comment');
+const Task = require('../models/Task');
 
 // Функция регистрации пользователя
 async function registration(req, res) {
@@ -185,6 +188,12 @@ async function deleteUser(req, res) {
 
     // Удаление пользователя
     await user.remove();
+    // Удаление постов пользователя
+    await Post.remove({ author: req.params.id });
+    // Удаление задач пользователя
+    await Task.remove({ executor: req.params.id });
+    // Удаление комментариев пользователя
+    await Comment.remove({ author: req.params.id });
 
     // Отправляем сообщение об успешном удаление
     res.json({ message: 'Пользователь удален' });
