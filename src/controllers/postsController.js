@@ -115,7 +115,7 @@ async function updatePost(req, res) {
     await post.update({
       text: !text ? post.text : text,
       title: !title ? post.title : title,
-      draft: !draft ? post.draft : draft,
+      draft: draft === null ? draft : post.draft,
     });
 
     // Отправляем сообщение об успехе операции
