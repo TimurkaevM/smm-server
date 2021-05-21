@@ -116,7 +116,6 @@ async function updatePost(req, res) {
       text: !text ? post.text : text,
       title: !title ? post.title : title,
       draft: draft === null ? post.draft : draft,
-      author: post.author,
     });
 
     // Отправляем сообщение об успехе операции
