@@ -115,8 +115,10 @@ async function updatePost(req, res) {
     await post.update({
       text: !text ? post.text : text,
       title: !title ? post.title : title,
-      draft: draft === null ? draft : post.draft,
+      draft: draft === undefined ? post.draft : draft,
     });
+
+    console.log(sss);
 
     // Отправляем сообщение об успехе операции
     res.status(200).json({ message: 'Пост изменен' });
