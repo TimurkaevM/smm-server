@@ -112,13 +112,16 @@ async function updatePost(req, res) {
     }
 
     // Изменение поста
-    await post.update({
-      text: !text ? post.text : text,
-      title: !title ? post.title : title,
-      draft: draft === undefined ? post.draft : draft,
-    });
+    await post.update(
+      {
+        text: !text ? post.text : text,
+        title: !title ? post.title : title,
+        draft: draft === undefined ? post.draft : draft,
+      },
+      { upsert: true },
+    );
 
-    console.log(sss);
+    console.log('sss');
 
     // Отправляем сообщение об успехе операции
     res.status(200).json({ message: 'Пост изменен' });
