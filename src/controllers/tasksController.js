@@ -54,7 +54,6 @@ async function create(req, res) {
     // Добавляем задачу
     const task = new Task({
       message,
-      time,
       executor: { ...user },
     });
 

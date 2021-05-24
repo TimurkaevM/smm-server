@@ -6,7 +6,6 @@ const Task = new Schema(
     executor: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     inWork: { type: Boolean, required: true, default: true },
     completed: { type: Boolean, required: true, default: false },
-    time: { type: String, required: true },
   },
   {
     timestamps: true,
