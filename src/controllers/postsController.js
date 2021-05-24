@@ -87,55 +87,39 @@ async function create(req, res) {
 // Функция изменения поста
 async function updatePost(req, res) {
   try {
-    //Получаем данные
-    // const { title, text, draft } = req.body;
+    // Находим пост по айди
+    const post = await Post.findById(req.params.id).populate(
+      'author',
+      'surname name mail',
+    );
 
-    // // Находим пост по айди
-    // const post = await Post.findById(req.params.id).populate(
-    //   'author',
-    //   'surname name mail',
-    // );
+    // Находим пользователя по айди
+    const user = await User.findOne({ _id: req.user.id });
 
-    // // Находим пользователя по айди
-    // const user = await User.findOne({ _id: req.user.id });
+    // Проверка, если пост не найден выводим ошибку
+    if (!post) {
+      return res.status(404).json({ message: 'Пост не найден' });
+    }
 
-    // // Проверка, если пост не найден выводим ошибку
-    // if (!post) {
-    //   return res.status(404).json({ message: 'Пост не найден' });
-    // }
-
-    // // Проверка. Только пользователь добавивший пост может изменить его
-    // if (!post.author._id.equals(user._id)) {
-    //   return res
-    //     .status(403)
-    //     .json({ message: 'Вы не можете редактировать этот пост' });
-    // }
-
-    // // Изменение поста
-    // await post.update(
-    //   {
-    //     text: !text ? post.text : text,
-    //     title: !title ? post.title : title,
-    //     draft: draft === undefined ? post.draft : draft,
-    //   },
-    //   { upsert: true },
-    // );
+    // Проверка. Только пользователь добавивший пост может изменить его
+    if (!post.author._id.equals(user._id)) {
+      return res
+        .status(403)
+        .json({ message: 'Вы не можете редактировать этот пост' });
+    }
 
     // console.log('sss');
     Post.findByIdAndUpdate(
       req.params.id,
       req.body,
       { upsert: true },
-      (err, user) => {
+      (err, post) => {
         if (err) {
           return res.status(500).json({ error: 'unsuccessful' });
         }
-        res.json({ success: 'success' });
+        res.json({ success: 'Пост изменен' });
       },
     );
-
-    // Отправляем сообщение об успехе операции
-    // res.status(200).json({ message: 'Пост изменен' });
   } catch (e) {
     console.log(e);
     res.status(409).json({ message: 'Error...' });
