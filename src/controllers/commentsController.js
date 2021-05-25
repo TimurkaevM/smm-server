@@ -105,7 +105,7 @@ async function updateComment(req, res) {
 async function destroy(req, res) {
   try {
     // Находим комментарий по айди
-    const comment = await Post.findById(req.params.id);
+    const comment = await Comment.findById(req.params.id);
 
     // Находим пользователя по айди
     const user = await User.findById(req.user.id);
