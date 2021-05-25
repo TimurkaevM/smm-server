@@ -46,7 +46,7 @@ async function create(req, res) {
     }
 
     // Получаем данные
-    const { message, time } = req.body;
+    const { message } = req.body;
 
     // Находим исполнителя
     const user = await User.findById(req.params.userID);
