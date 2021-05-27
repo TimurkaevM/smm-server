@@ -122,9 +122,6 @@ async function updateByAdmin(req, res) {
 // Функция изменения задачи исполнителем (исполнитель может изменить только 2 значения(inWork и completed))
 async function updateByUser(req, res) {
   try {
-    // Получаем данные
-    const { inWork, completed } = req.body;
-
     // Находим задачу по id
     const task = await Task.findById(req.params.id);
 
@@ -151,16 +148,17 @@ async function updateByUser(req, res) {
     }
 
     // Изменение задачи пользователем
-    await task.update({
-      message: task.message,
-      time: task.time,
-      executor: task.executor,
-      inWork: !inWork ? task.inWork : inWork,
-      completed: !completed ? task.completed : completed,
-    });
-
-    // Отправляем сообщение об успехе операции
-    res.status(200).json({ message: 'Задача изменена' });
+    Task.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { upsert: true },
+      (err, task) => {
+        if (err) {
+          return res.status(500).json({ error: 'unsuccessful' });
+        }
+        res.json({ success: 'Задача изменен' });
+      },
+    );
   } catch (e) {
     console.log(e);
     return res.status(404).json({ message: 'Ошибка при изменение задачи!' });
