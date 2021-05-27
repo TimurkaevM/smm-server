@@ -65,9 +65,6 @@ async function createComment(req, res) {
 // Функция изменения поста
 async function updateComment(req, res) {
   try {
-    //Получаем данные
-    const { message } = req.body;
-
     // Находим комментарий по айди
     const comment = await Comment.findById(req.params.id);
 
@@ -87,14 +84,17 @@ async function updateComment(req, res) {
     }
 
     // Изменение поста
-    await comment.update({
-      message: !message ? comment.message : message,
-      author: comment.author,
-      postId: comment.post,
-    });
-
-    // Отправляем сообщение об успехе операции
-    res.status(200).json({ message: 'Комментарий изменен' });
+    Comment.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { upsert: true },
+      (err, comment) => {
+        if (err) {
+          return res.status(500).json({ error: 'unsuccessful' });
+        }
+        res.json({ success: 'Комментарий изменен' });
+      },
+    );
   } catch (e) {
     console.log(e);
     res.status(409).json({ message: 'Error...' });

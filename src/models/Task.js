@@ -4,7 +4,6 @@ const Task = new Schema(
   {
     message: { type: String, required: true },
     executor: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    inWork: { type: Boolean, required: true, default: true },
     completed: { type: Boolean, required: true, default: false },
   },
   {
