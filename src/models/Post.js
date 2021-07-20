@@ -7,7 +7,7 @@ const Post = new Schema(
     title: { type: String, required: true },
     text: { type: String, required: true },
     title: { type: String, required: true },
-    draft: { type: Boolean, required: true, default: true },
+    draft: { type: Boolean, required: true, default: false },
   },
   {
     timestamps: true,
